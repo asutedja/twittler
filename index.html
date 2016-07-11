@@ -12,6 +12,7 @@ Shows how long it has been since or when the tweet has been made
   <body>
   <tweet><div></div></tweet>
   <user><div></div></user>
+  <hashtag></hashtag>
   
     <script>
 
@@ -33,6 +34,7 @@ Shows how long it has been since or when the tweet has been made
           var $body = $('user')
           $body.prepend('<h1>@'+ user + '</h1>');
           $('tweet').hide();
+          $('hastag').hide();
           var index = streams.users[user].length - 1;
           while(index >= 0){
             var tweet = streams.users[user][index];
@@ -42,7 +44,35 @@ Shows how long it has been since or when the tweet has been made
             index -= 1;
           }
         })
+       $('.hashtag').on('click',function(){
+          var hashtag = $(this).text();
+          var $body = $('hashtag')
+          $('tweet').hide();
+          $('user').hide();
+          $body.prepend('<h1>'+ hashtag + '</h1>');
+          var collection = streams.users;
+          var hashMessages = [];
+          for(var key in collection){
+            var index = collection[key].length -1;
+            while(index >= 0){
+              var check = collection[key][index];
+              if (check.message.includes(hashtag)){
+                check.user = key;
+                hashMessages.push(check);
 
+              }
+              index -= 1;
+            }
+          } 
+          index = hashMessages.length-1
+          while(index >= 0){
+            var tweet = hashMessages[index];
+            var $tweet = $('<div></div>');
+            $tweet.prepend(tweet.created_at.toLocaleTimeString() + ' @' + tweet.user + ' ' + tweet.message);
+            $tweet.appendTo($body);
+            index -= 1;
+          }
+        })
       });
 
     </script>

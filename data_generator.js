@@ -23,6 +23,9 @@ var addTweet = function(newTweet){
 // utility function
 var randomElement = function(array){
   var randomIndex = Math.floor(Math.random() * array.length);
+  if(array[randomIndex].includes('#')){
+    return '<a class=hashtag>' + array[randomIndex] + '</a>'
+  }
   return array[randomIndex];
 };
 
