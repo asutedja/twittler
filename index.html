@@ -2,22 +2,124 @@
 Clicking on a hash tag makes a list of tweets with that hashtag  
 Clicking on a handle makes a list of tweets made by the handle
 Shows how long it has been since or when the tweet has been made
+Adding a tweet.
+
+
 -->
+
+
 <!DOCTYPE html>
 <html>
   <head>
     <script src="jquery.js"></script>
     <script src="data_generator.js"></script>
+    <link rel="stylesheet" href="styles.css">
   </head>
   <body>
-  <tweet><div></div></tweet>
-  <user><div></div></user>
-  <hashtag></hashtag>
+  <img id=right src=twitter-bird-vector-400x400.png>
+  <img id=left src=twitter-bird-vector-400x400.png>
+  <reset><button class="reset">Home</button>
+  <form id="visitor" action="form_action.asp">
+    User: <input type="text" name="fname"><input id='submit'type='button' value='Submit'><br>
+</form>
+  <form id="write" action="form_action.asp">
+    Tweet: <input type="text" name="fname"><input id='submit'type='button' value='Submit' onclick="submitForm()"><br>
+  </form>
+  <div id=tweet></div>
+  <div id=user></div>
+  <div id=hashtag></div></reset>
   
     <script>
-
+        
+     var visitor = 'placeholder';
+    //Initial loading of tweets
       $(document).ready(function(){
-        var $body = $('tweet');
+        $('#write').hide();
+
+       
+        $('#visitor #submit').on('click',function(){
+          var info = document.getElementById('visitor');  
+          visitor = info.elements[0].value;
+          streams.users[visitor] = [];
+          $('#visitor').hide();
+          $('#write').show();
+        })
+        
+        $('#write #submit').on('click',function(){
+          var info = document.getElementById('write');
+          var tweet = info.elements[0].value;
+          writeTweet(tweet);
+
+        })
+        //This body of code up until the reset button is used to preload the first ten random messages generated.
+        var $body = $('#tweet');
+        $body.html('');
+        $body.prepend('<h1>Twittler</h1>');
+        var index = streams.home.length - 1;
+        while(index >= 0){
+          var tweet = streams.home[index];
+          var $tweet = $('<div></div>');
+          $tweet.append(tweet.created_at.toLocaleTimeString() + ' <a class=user ' + tweet.user + '>@' + tweet.user + '</a>: ' + tweet.message);
+          $tweet.appendTo($body);
+          index -= 1;
+        }
+
+        //Organizes tweets by user
+        $('.user').on('click',function(){
+          $('#user').empty();
+          var user = $(this).text().replace('@','');
+          var $body = $('#user')
+          $body.prepend('<h1>@'+ user + '</h1>');
+          $('#tweet').hide();
+          $('#hashtag').hide();
+          $('#user').show();
+          var index = streams.users[user].length - 1;
+          while(index >= 0){
+            var tweet = streams.users[user][index];
+            var $tweet = $('<div></div>');
+            $tweet.prepend(tweet.created_at.toLocaleTimeString() + ' <a class=user ' + tweet.user + '>@' + tweet.user + '</a>: ' + tweet.message);
+            $tweet.appendTo($body);
+            index -= 1;
+          }
+        })
+        //Organizes tweets by hashtag
+       $('.hashtag').on('click',function(){
+          $('#hashtag').empty();
+          var hashtag = $(this).text();
+          var $body = $('#hashtag')
+          $('#tweet').hide();
+          $('#user').hide();
+          $('#hashtag').show();
+          $body.prepend('<h1>'+ hashtag + '</h1>');
+          var collection = streams.users;
+          var hashMessages = [];
+          for(var key in collection){
+            var index = collection[key].length -1;
+            while(index >= 0){
+              var check = collection[key][index];
+              if (check.message.includes(hashtag)){
+                check.user = key;
+                hashMessages.push(check);
+              }
+              index -= 1;
+            }
+          } 
+          index = hashMessages.length-1
+          while(index >= 0){
+            var tweet = hashMessages[index];
+            var $tweet = $('<div></div>');
+            $tweet.prepend(tweet.created_at.toLocaleTimeString() + ' @' + tweet.user + ' ' + tweet.message);
+            $tweet.appendTo($body);
+            index -= 1;
+          }
+        })
+       //Reset for updating for new tweets.
+      $('reset').on('click','button',function(){ 
+           $('#tweet').show();
+           $('#user').hide();     
+           $('#hashtag').hide(); 
+
+        var $body = $('#tweet');
         $body.html('');
         $body.prepend('<h1>Twittler</h1>');
         var index = streams.home.length - 1;
@@ -30,11 +132,13 @@ Shows how long it has been since or when the tweet has been made
         }
 
         $('.user').on('click',function(){
+          $('#user').empty();
           var user = $(this).text().replace('@','');
-          var $body = $('user')
+          var $body = $('#user')
           $body.prepend('<h1>@'+ user + '</h1>');
-          $('tweet').hide();
-          $('hastag').hide();
+          $('#tweet').hide();
+          $('#hashtag').hide();
+          $('#user').show();
           var index = streams.users[user].length - 1;
           while(index >= 0){
             var tweet = streams.users[user][index];
@@ -45,10 +149,12 @@ Shows how long it has been since or when the tweet has been made
           }
         })
        $('.hashtag').on('click',function(){
+          $('#hashtag').empty();
           var hashtag = $(this).text();
-          var $body = $('hashtag')
-          $('tweet').hide();
-          $('user').hide();
+          var $body = $('#hashtag')
+          $('#tweet').hide();
+          $('#user').hide();
+          $('#hashtag').show();
           $body.prepend('<h1>'+ hashtag + '</h1>');
           var collection = streams.users;
           var hashMessages = [];
@@ -73,6 +179,8 @@ Shows how long it has been since or when the tweet has been made
             index -= 1;
           }
         })
+
+        });
       });
 
     </script>

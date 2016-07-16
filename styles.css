@@ -1,0 +1,55 @@
+html {
+	background: rgb(255,195,50);
+}
+#right{
+	bottom:-100px;
+	float: right;
+	position: relative;
+}
+#left{
+	bottom:300px;
+	position: absolute;
+}
+.reset{
+    position:absolute;
+    transition: .5s ease;
+    left: 50%;
+}
+form {
+	margin: auto;
+	text-align: center;
+}
+#tweet div {
+  border: 1px solid black;
+  height: 20px;
+  margin: auto;
+  padding: 10px;
+  width: 600px;
+}
+#user div {
+  border: 1px solid black;
+  height: 20px;
+  margin: auto;
+  padding: 10px;
+  width: 600px;
+}
+#hashtag div {
+  border: 1px solid black;
+  height: 20px;
+  margin: auto;
+  padding: 10px;
+  width: 600px;
+}
+
+h1{
+	text-align: center;
+}
+
+#tweet h1{
+	text-align: center;
+	font-style: oblique;
+	color:rgb(0,100,255);
+}
+
+
+

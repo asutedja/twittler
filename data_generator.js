@@ -21,6 +21,7 @@ var addTweet = function(newTweet){
 };
 
 // utility function
+// added a function to wrap hashtags with a hashtag tag to help sort later.
 var randomElement = function(array){
   var randomIndex = Math.floor(Math.random() * array.length);
   if(array[randomIndex].includes('#')){
@@ -68,5 +69,7 @@ var writeTweet = function(message){
   var tweet = {};
   tweet.user = visitor;
   tweet.message = message;
+  tweet.created_at = new Date();
   addTweet(tweet);
 };
+
